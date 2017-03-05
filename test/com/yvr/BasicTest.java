@@ -6,5 +6,6 @@ public class BasicTest {
     @Test
     public void testCalculateAppriasal() {
         Program.main(null);
+        System.out.println("Hello Again!");
     }
 }
