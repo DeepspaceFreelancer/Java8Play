@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="Suite">
+    <test name="Test01">
+        <classes>
+            <class name="TestNGSimpleTest"/>
+        </classes>
+    </test>
+    <test name="Test02">
+        <classes>
+            <class name="TestEmployeeDetails"/>
+        </classes>
+    </test>
+    <test name="Test03">
+        <classes>
+            <class name="TestngAnnotation"/>
+        </classes>
+    </test>
+    <test name="Test04">
+        <classes>
+            <class name="TestIgnore"/>
+        </classes>
+    </test>
+    <test name="Test05">   
+        <groups>
+            <run>
+                <include name="functest" />
+            </run>
+        </groups>
+        <classes>
+            <class name="TestGroupExample" />
+        </classes>   
+    </test>   
+    <test name="Test06">   
+        <groups>      
+            <define name="all">
+                <include name="functest"/>
+                <include name="checkintest"/>
+            </define>         
+            <run>
+                <include name="all"/>
+            </run>         
+        </groups>      
+        <classes>
+            <class name="TestGroupExample" />
+        </classes>      
+    </test>
+    <test name="Test07">
+        <classes>
+            <class name="TestExpectedException" />
+        </classes>
+    </test>    
+    <test name="Test08">
+        <classes>
+            <class name="TestDependencyUsingDependsOnMethods" />
+        </classes>
+    </test>
+    <test name="Test09">
+        <classes>
+            <class name="TestDependencyUsingAnnotation" />
+        </classes>
+    </test>
+    <test name="Test10">
+        <parameter name="myName" value="WillNotShow"/>
+        <parameter name="myName" value="manisha"/>
+        <classes>
+            <class name="TestParameterized1" />
+        </classes>      
+    </test>
+    <test name="Test11">
+        <parameter name="myName" value="fosika"/>
+        <classes>
+            <class name="TestParameterized1" />
+        </classes>      
+    </test>
+    <test name="Test12">
+        <classes>
+            <class name="TestParamWithDataProvider1" />
+        </classes>
+    </test>
+    <test name="Test13">
+        <classes>
+            <class name="TestParamWithDataProvider2" />
+        </classes>
+    </test>
+    <test name="JUnitTests" junit="true">
+        <classes>
+            <class name="TestJunit" />
+        </classes>
+    </test>
+</suite>
