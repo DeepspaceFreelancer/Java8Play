@@ -1,32 +1,33 @@
 <?xml version="1.0"?>
-<project name="TestNG" default="build-jar">
+<project name="TestNG" xmlns:ivy="antlib:org.apache.ivy.ant" default="build-jar">
+
+    <target name="resolve" description="retrieve dependencies with ivy">
+        <ivy:retrieve/>
+    </target>
+
+    <ivy:cachepath pathid="external.classpath"/>
 
     <property name="src.dir" value="src"/>
     <property name="test.dir" value="test"/>
     <property name="build.dir" value="build"/>
     <property name="lib.dir" value="lib"/>
-	<!-- Work Laptop <property name="external.lib.dir" value="C:/PortableApps/JavaLibs"/> -->
+    <!-- Work Laptop <property name="external.lib.dir" value="C:/PortableApps/JavaLibs"/> -->
     <property name="external.lib.dir" value="I:\PortableApps\JavaLibs"/>
     <property name="test.output.dir" value="test.out"/>
     <property name="test.config.dir" value="test.config"/>
 
-    <!-- The master-classpath holds the classpath information. In this case, it includes the classes in the build folder and the jar files in the lib folder. -->
-    <path id="master-classpath">
-        <fileset dir="${external.lib.dir}">
-            <include name="google/com.google.guava_1.6.0.jar"/>
-            <include name="testng/testng-6.9.12.jar"/>
-            <include name="jcommander/jcommander-1.48.jar"/>
-            <include name="junit/junit-4.7.jar"/>
-        </fileset>
+    <!-- The master.classpath holds the classpath information. In this case, it includes the classes in the build folder and the jar files in the lib folder. -->
+    <path id="master.classpath">
         <pathelement path="${build.dir}"/>
+        <path refid="external.classpath"/>
     </path>
 
-    <target name="build" description="Compile source tree java files">
+    <target name="build" description="Compile source tree java files" depends="resolve">
         <mkdir dir="${build.dir}"/>
-        <javac destdir="${build.dir}" source="1.8" target="1.8">
+        <javac destdir="${build.dir}" source="1.8" target="1.8" includeantruntime="false">
             <src path="${src.dir}"/>
             <src path="${test.dir}"/>
-            <classpath refid="master-classpath"/>
+            <classpath refid="master.classpath"/>
         </javac>
     </target>
 
@@ -39,31 +40,28 @@
         </delete>
     </target>
 
-    <target name="build-jar" depends="build">
-        <jar destfile="${lib.dir}/TestNGTry6.jar"
-             basedir="${build.dir}">
-        </jar>
+    <target name="build-jar" depends="build" description="Builds the JAR">
+        <jar destfile="${lib.dir}/Java8Play.jar" basedir="${build.dir}"/>
     </target>
 
 
     <!-- Define <testng> task -->
-
     <taskdef name="testng" classname="org.testng.TestNGAntTask">
-        <classpath refid="master-classpath"/>
+        <classpath refid="master.classpath"/>
     </taskdef>
 
     <path id="classpath.base"/>
     <path id="classpath.test">
         <fileset dir="${lib.dir}">
-            <include name="**/*.jar" />
+            <include name="**/*.jar"/>
         </fileset>
-        <path refid="master-classpath"/>
-        <path refid="classpath.base" />
+        <path refid="master.classpath"/>
+        <path refid="classpath.base"/>
     </path>
 
-    <target name="test" depends="build-jar">
-        <testng outputdir="${test.output.dir}" classpathref="classpath.test"> 
-            <xmlfileset dir="${test.config.dir}" includes="testng.xml"/> 
+    <target name="test" depends="build-jar" description="Runst the tests">
+        <testng outputdir="${test.output.dir}" classpathref="classpath.test">
+            <xmlfileset dir="${test.config.dir}" includes="testng.xml"/>
         </testng>
     </target>
 
