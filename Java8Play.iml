@@ -26,5 +26,36 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="module-library">
+      <library name="IvyIDEA">
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.testng/testng/jars/testng-6.8.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/junit/junit/jars/junit-4.10.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.hamcrest/hamcrest-core/jars/hamcrest-core-1.1.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.beanshell/bsh/jars/bsh-2.0b4.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/com.beust/jcommander/jars/jcommander-1.27.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.yaml/snakeyaml/jars/snakeyaml-1.6.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/com.google.inject/guice/jars/guice-2.0.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/aopalliance/aopalliance/jars/aopalliance-1.0.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.apache.ant/ant/jars/ant-1.7.0.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.apache.ant/ant-launcher/jars/ant-launcher-1.7.0.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.testng/testng/javadocs/testng-6.8-javadoc.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/junit/junit/javadocs/junit-4.10-javadoc.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/com.beust/jcommander/javadocs/jcommander-1.27-javadoc.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.yaml/snakeyaml/javadocs/snakeyaml-1.6-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.testng/testng/sources/testng-6.8-sources.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/junit/junit/sources/junit-4.10-sources.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.hamcrest/hamcrest-core/sources/hamcrest-core-1.1-sources.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/com.beust/jcommander/sources/jcommander-1.27-sources.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.yaml/snakeyaml/sources/snakeyaml-1.6-sources.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/aopalliance/aopalliance/sources/aopalliance-1.0-sources.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.apache.ant/ant/sources/ant-1.7.0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
   </component>
 </module>
