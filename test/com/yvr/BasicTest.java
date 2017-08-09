@@ -1,9 +1,9 @@
 package com.yvr;
 
+import org.testng.annotations.Test;
+
 import java.io.File;
 import java.util.List;
-
-import org.testng.annotations.Test;
 
 public class BasicTest {
 
@@ -25,5 +25,15 @@ public class BasicTest {
     public void ch02Ex03() throws Exception {
         lambdaPlay.ch02Ex03_OrderA("src/com/yvr/LambdaPlay.java");
         lambdaPlay.ch02Ex03_OrderB("src/com/yvr/LambdaPlay.java");
+    }
+
+    @Test
+    public void ch03Ex01() {
+        lambdaPlay.ch03Ex01();
+    }
+
+    @Test
+    public void ch06_01_AtomicValues() {
+        lambdaPlay.ch06_01_AtomicValues();
     }
 }

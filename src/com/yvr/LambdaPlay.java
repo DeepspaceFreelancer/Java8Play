@@ -5,8 +5,9 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.LongAdder;
 import java.util.stream.Collectors;
 
 public class LambdaPlay {
@@ -88,4 +89,80 @@ public class LambdaPlay {
 
     }
 
+    /*
+        Enhance the lazy logging technique by providing conditional logging.
+        A typical call would be logIf(Level.FINEST, () -> i == 10, () -> "a[10] = " + a[10]).
+        Don’t evaluate the condition if the logger won’t log the message.
+     */
+    public void ch03Ex01() {
+        logIf(false, () -> System.out.println("Do not write out"));
+        logIf(true, () -> System.out.println("Write out"));
+
+        try {
+            logIf2(false, () -> {
+                System.out.println("Do not write out");
+                return 0;
+            });
+            logIf2(true, () -> {
+                System.out.println("Write out");
+                return 0;
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void logIf(final boolean flag_in, Runnable runnable_in) {
+        if (flag_in) {
+            runnable_in.run();
+        }
+    }
+
+    private void logIf2(final boolean flag_in, Callable<Integer> callable_in) throws Exception {
+        if (flag_in) {
+            callable_in.call();
+        }
+    }
+
+    public void ch06_01_AtomicValues() {
+        AtomicLong atomic = new AtomicLong();
+        long newValue = atomic.incrementAndGet();
+        System.out.printf("After increment new value: %d%n", newValue);
+
+        newValue = atomic.updateAndGet(x -> Math.max(x, 0));
+        System.out.printf("Trying to update 1 new value: %d%n", newValue);
+        newValue = atomic.updateAndGet(x -> Math.max(x, 2));
+        System.out.printf("Trying to update 2 new value: %d%n", newValue);
+
+        long beforeValue = atomic.getAndUpdate(x -> Math.max(x, 1));
+        System.out.printf("Trying to get and update old value: %d, new value: %d%n", beforeValue, atomic.get());
+        beforeValue = atomic.getAndUpdate(x -> Math.max(x, 3));
+        System.out.printf("Trying to get and update old value: %d, new value: %d%n", beforeValue, atomic.get());
+
+        newValue = atomic.accumulateAndGet(2, Math::max);
+        System.out.printf("Trying to update 1 new value: %d%n", newValue);
+        newValue = atomic.accumulateAndGet(4, Math::max);
+        System.out.printf("Trying to update 2 new value: %d%n", newValue);
+
+        beforeValue = atomic.getAndAccumulate(3, Math::max);
+        System.out.printf("Trying to get and update old value: %d, new value: %d%n", beforeValue, atomic.get());
+        beforeValue = atomic.getAndAccumulate(5, Math::max);
+        System.out.printf("Trying to get and update old value: %d, new value: %d%n", beforeValue, atomic.get());
+
+        final ExecutorService executor = Executors.newFixedThreadPool(2);
+        final LongAdder adder = new LongAdder();
+        for (int i = 0; i < 10; ++i) {
+            executor.submit(() -> {
+                adder.increment();
+            });
+        }
+        executor.shutdown();
+        try {
+            executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        final long total = adder.sum();
+        System.out.printf("Total: %d%n", total);
+    }
 }
