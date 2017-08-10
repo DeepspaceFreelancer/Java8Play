@@ -1,7 +1,7 @@
 package com.yvr;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -164,5 +164,30 @@ public class LambdaPlay {
         }
         final long total = adder.sum();
         System.out.printf("Total: %d%n", total);
+    }
+
+    /*
+        Write a program that asks the user for a URL, then reads the web page at that URL, and then displays all the links.
+        Use a CompletableFuture for each stage. Don’t call get.
+        To prevent your program from terminating prematurely, call ForkJoinPool.commonPool().awaitQuiescence(10, TimeUnit.SECONDS);
+     */
+    public void ch06ex10() throws Exception {
+        final URL url = new URL("https://stackoverflow.com/");
+
+
+    }
+
+    CompletableFuture<String> getUrl(final URL url) throws Exception {
+        try (final InputStream is = url.openStream()) {
+            try (final BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
+                return CompletableFuture.supplyAsync(() -> br.lines().collect(Collectors.joining()));
+            }
+        }
+    }
+
+    CompletableFuture<List<String>> getLinks(final String webpage) {
+        for (String line : webpage.split("\n")) {
+            if (line.contains())
+        }
     }
 }
