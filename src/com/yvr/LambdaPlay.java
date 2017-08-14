@@ -170,24 +170,42 @@ public class LambdaPlay {
         Write a program that asks the user for a URL, then reads the web page at that URL, and then displays all the links.
         Use a CompletableFuture for each stage. Don’t call get.
         To prevent your program from terminating prematurely, call ForkJoinPool.commonPool().awaitQuiescence(10, TimeUnit.SECONDS);
+
+        Itt lesz az igazan jo megoldas:
+        https://github.com/galperin/Solutions-for-exercises-from-Java-SE-8-for-the-Really-Impatient-by-Horstmann/blob/master/src/main/java/de/galperin/javase8/capitel6/C6E10.java
      */
     public void ch06ex10() throws Exception {
         final URL url = new URL("https://stackoverflow.com/");
+        CompletableFuture<List<String>> firstBatch = getUrl(url);
+        CompletableFuture<List<String>> secondBatch = firstBatch.thenCompose(this::getLinks);
 
+        //ForkJoinPool.commonPool().awaitQuiescence(10, TimeUnit.SECONDS);
+        for (int i = 0; i < 20; ++i) {
+            System.out.println("I am doing something else!");
+        }
 
+        final List<String> resultList = secondBatch.get();
+        for (final String line : resultList) {
+            System.out.println(line);
+        }
     }
 
-    CompletableFuture<String> getUrl(final URL url) throws Exception {
+    CompletableFuture<List<String>> getUrl(final URL url) throws Exception {
         try (final InputStream is = url.openStream()) {
             try (final BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
-                return CompletableFuture.supplyAsync(() -> br.lines().collect(Collectors.joining()));
+                List<String> result = br.lines().collect(Collectors.toList());
+                return CompletableFuture.supplyAsync(() -> result);
             }
         }
     }
 
-    CompletableFuture<List<String>> getLinks(final String webpage) {
-        for (String line : webpage.split("\n")) {
-            if (line.contains())
+    CompletableFuture<List<String>> getLinks(final List<String> webpage) {
+        final List<String> result = new ArrayList<>();
+        for (final String line : webpage) {
+            if (line.contains("a href=")) {
+                result.add(line);
+            }
         }
+        return CompletableFuture.supplyAsync(() -> result);
     }
 }
