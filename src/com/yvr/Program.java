@@ -4,8 +4,8 @@ public class Program {
 
     public static void main(String[] args) throws Exception {
 
-        LambdaPlay lambdaPlay = new LambdaPlay();
-        lambdaPlay.ch06ex10();
-
+        // To Draw Inspiration:
+        // https://github.com/galperin/Solutions-for-exercises-from-Java-SE-8-for-the-Really-Impatient-by-Horstmann
+        System.out.println("Doing a refactoring");
     }
 }

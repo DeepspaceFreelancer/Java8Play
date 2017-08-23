@@ -8,7 +8,9 @@ import java.util.Scanner;
 
 public class Util {
 
-    static List<String> getWordsFromFile(final String fileName_in) throws FileNotFoundException {
+    public static final int THREAD_COUNT_LIMIT = (Runtime.getRuntime().availableProcessors() >> 1);
+
+    public static List<String> getWordsFromFile(final String fileName_in) throws FileNotFoundException {
         List<String> wordList = new ArrayList<String>();
         try (Scanner s = new Scanner(new File(fileName_in))) {
             while (s.hasNext()) {
@@ -18,12 +20,10 @@ public class Util {
         return wordList;
     }
 
-    static long measureExecution(final Runnable runnable) {
+    public static long measureExecution(final Runnable runnable) {
         final long before = System.currentTimeMillis();
         runnable.run();
         final long after = System.currentTimeMillis();
         return after - before;
     }
-
-    static final int THREAD_COUNT_LIMIT = (Runtime.getRuntime().availableProcessors() >> 1);
 }
