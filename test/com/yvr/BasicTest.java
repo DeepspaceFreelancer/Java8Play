@@ -44,6 +44,11 @@ public class BasicTest {
     }
 
     @Test
+    public void ch06Lecture02_ConcurrentHashMap() {
+        ch06.ch06_02_ConcurrentHashMap();
+    }
+
+    @Test
     public void ch06Ex10() throws Exception {
         ch06.ch06ex10_v1();
         ch06.ch06ex10_v2();
