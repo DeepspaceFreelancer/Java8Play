@@ -39,7 +39,7 @@ public class BasicTest {
     }
 
     @Test
-    public void ch06_01_AtomicValues() {
+    public void ch06Lecture01_AtomicValues() {
         ch06.ch06_01_AtomicValues();
     }
 
