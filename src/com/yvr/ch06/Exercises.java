@@ -6,12 +6,13 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,16 +22,23 @@ import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.LongAccumulator;
 import java.util.concurrent.atomic.LongAdder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
+
+import com.yvr.Util;
 
 public class Exercises {
 
+    Random random = new Random();
+
     //region Chapter 06 Lectures ---------------------------------------------------------------------------------------
-    // Chapter 06 Lecture 01
+    //region Chapter 06 Lecture 01 -------------------------------------------------------------------------------------
     public void ch06_01_AtomicValues() {
         AtomicLong atomicLong = new AtomicLong();
         long newValue = atomicLong.incrementAndGet();
@@ -59,9 +67,7 @@ public class Exercises {
         final ExecutorService executor = Executors.newFixedThreadPool(2);
         final LongAdder longAdder = new LongAdder();
         for (int i = 0; i < 10; ++i) {
-            executor.submit(() -> {
-                longAdder.increment();
-            });
+            executor.submit(longAdder::increment);
         }
         executor.shutdown();
         try {
@@ -73,6 +79,46 @@ public class Exercises {
         System.out.printf("Total: %d%n", total);
     }
 
+    public void ch06_01_Accumulators() {
+        LongAccumulator maxAccumulator = new LongAccumulator(Math::max, 0);
+        LongAccumulator minAccumulator = new LongAccumulator(Math::min, 0);
+        LongAccumulator addAccumulator = new LongAccumulator(Math::addExact, 0); // This will be the sum
+
+        maxAccumulator.accumulate(15);
+        minAccumulator.accumulate(15);
+        addAccumulator.accumulate(15);
+
+        maxAccumulator.accumulate(10);
+        minAccumulator.accumulate(10);
+        addAccumulator.accumulate(10);
+
+        maxAccumulator.accumulate(20);
+        minAccumulator.accumulate(20);
+        addAccumulator.accumulate(20);
+
+        System.out.println("maxAccumulator: " + maxAccumulator.get());
+        System.out.println("minAccumulator: " + minAccumulator.get());
+        System.out.println("addAccumulator: " + addAccumulator.get());
+    }
+
+    public void ch06_01_AtomicReference() {
+
+        AtomicReference<String> atomicReference = new AtomicReference<>("Start");
+
+        System.out.println("-----------------: #####12345678901234567890");
+        IntStream.range(0, 10).parallel().forEach(i -> atomicReference.updateAndGet(current -> current + "+"));
+        System.out.println("First  processing: " + atomicReference.get());
+
+        IntStream.range(0, 10).parallel().forEach(i -> atomicReference.updateAndGet(
+                current -> {
+                    if (random.nextBoolean()) return current + "+";
+                    return current;
+                }));
+        System.out.println("Second processing: " + atomicReference.get());
+    }
+    //endregion Chapter 06 Lecture 01 ----------------------------------------------------------------------------------
+
+    //region Chapter 06 Lecture 02 -------------------------------------------------------------------------------------
     public void ch06_02_ConcurrentHashMap() {
 
         final String key = "key";
@@ -143,11 +189,12 @@ public class Exercises {
             }
 
             map.merge(key, Collections.singletonList(newItem), (list1, list2) ->
-                Stream.of(list1, list2)
-                    .flatMap(Collection::stream)
-                    .collect(Collectors.toList()));
+                    Stream.of(list1, list2)
+                            .flatMap(Collection::stream)
+                            .collect(Collectors.toList()));
         }
     }
+    //endregion Chapter 06 Lecture 02 ----------------------------------------------------------------------------------
 
     private AtomicInteger ch06_02_HelperMethod_newInstance() {
         System.out.println("ch06_02_HelperMethod_newInstance function got ran");
@@ -155,6 +202,33 @@ public class Exercises {
     }
 
     //endregion Chapter 06 Lectures ------------------------------------------------------------------------------------
+
+    //region Chapter 06 Exercise 01 ------------------------------------------------------------------------------------
+    /* Chapter 06 Exercise 01
+        Write a program that keeps track of the longest string that is observed by a number of threads.
+        Use an AtomicReference and an appropriate accumulator.
+     */
+    public String ch06ex01_v1() {
+        AtomicReference<String> longest = new AtomicReference<>();
+        LongAccumulator accumulator = new LongAccumulator(Math::max, 0);
+        List<String> words = Util.getWords();
+        words.parallelStream().forEach(
+                next -> longest.updateAndGet(
+                        current -> {
+                            String result = next.length() > accumulator.intValue() ? next : current;
+                            accumulator.accumulate(next.length());
+                            return result;
+                        }));
+        System.out.println(longest.get());
+        return longest.get();
+    }
+
+    public String ch06ex01_v2() {
+        List<String> words = Util.getWords();
+        return words.parallelStream().max(Comparator.comparingInt(String::length))
+                .orElseThrow(() -> new RuntimeException("Could Not Find a Word"));
+    }
+    //endregion Chapter 06 Exercise 01 ---------------------------------------------------------------------------------
 
     //region Chapter 06 Exercise 10 ------------------------------------------------------------------------------------
     /* Chapter 06 Exercise 10

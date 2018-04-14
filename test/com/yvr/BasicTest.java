@@ -1,5 +1,6 @@
 package com.yvr;
 
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.File;
@@ -44,8 +45,25 @@ public class BasicTest {
     }
 
     @Test
+    public void ch06Lecture01_Accumulators() {
+        ch06.ch06_01_Accumulators();
+    }
+
+    @Test
+    public void ch06Lecture01_AtomicReference() {
+        ch06.ch06_01_AtomicReference();
+    }
+
+    @Test
     public void ch06Lecture02_ConcurrentHashMap() {
         ch06.ch06_02_ConcurrentHashMap();
+    }
+
+    @Test
+    public void ch06Ex01() {
+        String returnA = ch06.ch06ex01_v1();
+        String returnB = ch06.ch06ex01_v2();
+        Assert.assertEquals(returnA, returnB);
     }
 
     @Test
